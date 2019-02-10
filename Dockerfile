@@ -5,14 +5,14 @@
 # /home/git/.ssh/authorized_keys with the contents of this environment variable.
 #
 # Example:
-# $ docker run -it --rm --name dev --env AUTHORIZED_KEYS=<some_keys> devclient
+# $ docker run -it --rm --name dev --env AUTHORIZED_KEYS=<some_keys> -p 8022:22 devclient
 #
 # If you would like to run the container and connect a shell to it, then you
 # can simply pass "/bin/bash" to the docker command line. This will instruct
 # docker-entrypoint.sh to run the "/bin/bash" command instead of /usr/bin/sshd.
 #
 # Example:
-# $ docker run -it --rm --name dev --env AUTHORIZED_KEYS=<some_keys> devclient /bin/bash
+# $ docker run -it --rm --name dev devclient /bin/bash
 #
 FROM ubuntu:latest
 
