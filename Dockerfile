@@ -38,7 +38,7 @@ RUN apt-get update \
     && addgroup john \
     && adduser --disabled-password --shell /bin/bash --ingroup john --gecos 'The local user' --home /home/john john \
     && mkdir /home/john/.ssh \
-    && chown john:john /home/john/.ssh \
+    && chown -R john:john /home/john \
     && chmod 700 /home/john/.ssh \
 #
 #####
