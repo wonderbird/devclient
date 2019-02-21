@@ -5,7 +5,7 @@
 # /home/git/.ssh/authorized_keys with the contents of this environment variable.
 #
 # Example:
-# $ docker run -it --rm --name dev --env AUTHORIZED_KEYS=<some_keys> -p 8022:22 devclient
+# $ docker run -it --rm --name dev -v /path/to/home:/home/john --env AUTHORIZED_KEYS=<some_keys> -p 8022:22 devclient
 #
 # If you would like to run the container and connect a shell to it, then you
 # can simply pass "/bin/bash" to the docker command line. This will instruct
@@ -26,7 +26,13 @@ RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y apt-utils \
        	       	       	  git \
-    	    	          openssh-server \
+    	    	          openssh-server
+
+#####
+# Set up privilege separation directory for sshd
+####
+RUN mkdir /run/sshd \
+    && chmod 0755 /run/sshd \
 #
 #####
 # Set up the john user and the associated group
@@ -36,17 +42,12 @@ RUN apt-get update \
 #####
 #
     && addgroup john \
-    && adduser --disabled-password --shell /bin/bash --ingroup john --gecos 'The local user' --home /home/john john \
-    && mkdir /home/john/.ssh \
-    && chown -R john:john /home/john \
-    && chmod 700 /home/john/.ssh \
-#
+    && adduser --disabled-password --shell /bin/bash --ingroup john --gecos 'The local user' --home /home/john john
+
 #####
-# Set up privilege separation directory for sshd
-####
-#
-    && mkdir /run/sshd \
-    && chmod 0755 /run/sshd
+# Let john's home directory be mounted into the container and ensure john can access it.
+#####
+VOLUME ["/home/john"]
 
 #####
 # Setup and run the docker-entrypoint.sh script

@@ -21,9 +21,14 @@ sed -i '/#PasswordAuthentication/ s/yes/no/' /etc/ssh/sshd_config
 # Uncomment the PasswordAuthentication flag
 sed -i '/#PasswordAuthentication no/ s/#//' /etc/ssh/sshd_config
 
-echo "$AUTHORIZED_KEYS" | sed 's/\\n/\n/g' >/home/john/.ssh/authorized_keys
-chown john.john /home/john/.ssh/authorized_keys
+# Configure SSH access for user john
+mkdir -p /home/john/.ssh
+touch /home/john/.ssh/authorized_keys
+chown -R john:john /home/john/.ssh
+chmod -R 700 /home/john/.ssh
 chmod 600 /home/john/.ssh/authorized_keys
+
+echo "$AUTHORIZED_KEYS" | sed 's/\\n/\n/g' >/home/john/.ssh/authorized_keys
 
 # Enable the john user by configuring a random 64 byte password
 export PASSWD="$(LC_ALL=C tr -dc 'A-Za-z0-9!#$%&()*+,-./:;<=>?@[]_{|}' </dev/urandom | head -c 64)"
